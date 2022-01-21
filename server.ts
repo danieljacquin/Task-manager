@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import connectDB from './config/connection';
 dotenv.config();
 import apiRouter from './router/apiRouter';
+import notFound404 from './middlewears/notFound';
 
 const server = express();
 const PORT = process.env.PORT || 3000;
@@ -10,6 +11,7 @@ const CONNECTION_URL = process.env.CONNECT_URL;
 
 server.use(express.json());
 server.use('/', apiRouter);
+server.use(notFound404);
 
 const start = async() => {
     try {

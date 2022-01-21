@@ -1,61 +1,47 @@
 import { task } from '../models/task';
+import asyncHandler from '../middlewears/async-handler';
 
 class TaskController {
 
-    async getAll(req: any, res: any){
-        try {
-           const tasks =  await task.find();
-           res.status(200).json(tasks);
-        } catch (error) {
-            res.status(500).json({msg: error});
-        }
-    }
+    getAll = asyncHandler( async(req: any, res: any) => {
+        const tasks =  await task.find();
+        res.status(200).json(tasks);
+    })
 
-    async createTask(req: any, res: any){
-        try {
-            const { body } = req;
-            const newTask = await task.create(body);
-            res.status(200).json(newTask);
-        } catch (error) {
-            res.status(500).json({msg: error});
-        }
-    }
+    createTask = asyncHandler( async(req: any, res: any) => {
+        const { body } = req;
+        const newTask = await task.create(body);
+        res.status(200).json(newTask);
+    })
 
-    async getTask(req: any, res: any){
-        try{
-            const { id } = req.params;
-            const singleTask = await task.findById(id);
-            if(!singleTask){
-                return res.status(404).json({msg: 'No task with id: '+id})
-            }
-            res.status(200).json({msg: singleTask});
-        }catch(error){
-            res.status(500).json({msg: error});
+    getTask = asyncHandler( async(req: any, res: any) => {
+        const { id } = req.params;
+        const singleTask = await task.findById(id);
+        if(!singleTask){
+            return res.status(404).json({msg: 'No task with id: '+id})
         }
-    }
+        res.status(200).json({msg: singleTask});
+    })
 
-    async updateTask(req: any, res: any){
-        try{
-            const { id } = req.params;
-            const { body } = req;
-            const singleTask = await task.findByIdAndUpdate(id,body, { new: true});
-            if(!singleTask){
-                return res.status(404).json({msg: 'No task with id: '+id})
-            }
-            res.status(200).json({msg: singleTask});
-        }catch(error){
-             res.status(500).json({msg: error});
+    updateTask = asyncHandler( async(req: any, res: any) => {
+        const { id } = req.params;
+        const { body } = req;
+        const singleTask = await task.findByIdAndUpdate(id,body, { new: true});
+        if(!singleTask){
+            return res.status(404).json({msg: 'No task with id: '+id})
         }
-    }
+        res.status(200).json({msg: singleTask})
+    })
 
-    async deleteTask(req: any, res: any){
+    deleteTask = asyncHandler( async(req: any, res: any) => {
         const { id } = req.params;
         const removeTask = await task.findByIdAndDelete(id);
         if(!removeTask){
             return res.status(404).json({msg: 'No task with id: '+id});
         }
         res.status(200).json({msg: removeTask});
-    }
-}
+    })
+} 
+
 
 export const taskController = new TaskController();
